@@ -3,9 +3,11 @@
 
 #include "stdafx.h"
 
+#include <string.h>
 #include <stdio.h>
 #include <windows.h>
 #include <tlhelp32.h>
+#include <Shlwapi.h>
 
 
 int _tmain(int argc, char* argv[])
@@ -14,7 +16,22 @@ int _tmain(int argc, char* argv[])
 
 	if ( 1 < argc )
 	{
-		pid = atoi(argv[1]);
+		if ( !strcmp("-h", argv[1]) )
+		{
+			char filename[MAX_PATH+1];
+			memset(filename, '\0', MAX_PATH+1);
+
+			_snprintf( filename, MAX_PATH, "%s", argv[0] );
+
+			PathStripPath( filename );
+
+			printf("Usage: %s [ <(optional) Target PID)> ]\n", filename);
+			return 0;
+		}
+		else
+		{
+			pid = atoi(argv[1]);
+		}
 	}
 
 	HANDLE h = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
